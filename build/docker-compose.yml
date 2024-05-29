@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: TaskDB
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./../migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  redis:
+    image: redis:6.0
+    ports:
+      - "6379:6379"
+
+  api:
+    image: task_api:latest
+    ports:
+      - "8080:8080"
+    environment:
+      STORAGE_TYPE: mysql
+      MYSQL_DSN: root:root@tcp(mysql:3306)/TaskDB
+      REDIS_ADDR: redis:6379
+    depends_on:
+      - mysql
+      - redis
