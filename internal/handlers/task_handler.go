@@ -27,7 +27,7 @@ func (h *TaskHandler) GetTasks(c *gin.Context) {
 }
 
 func (h *TaskHandler) CreateTask(c *gin.Context) {
-	var newTask task.Task
+	var newTask task.Info
 	if err := c.ShouldBindJSON(&newTask); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -48,7 +48,7 @@ func (h *TaskHandler) UpdateTask(c *gin.Context) {
 		return
 	}
 
-	var updatedTask task.Task
+	var updatedTask task.Info
 	if err := c.ShouldBindJSON(&updatedTask); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

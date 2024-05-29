@@ -13,13 +13,13 @@ func TestCreateTask(t *testing.T) {
 
 	tests := []struct {
 		TestCase string
-		Input    task.Task
-		Expected task.Task
+		Input    task.Info
+		Expected task.Info
 	}{
 		{
-			TestCase: "Create Task",
-			Input:    task.Task{Name: "Test Task", Status: 0},
-			Expected: task.Task{ID: 1, Name: "Test Task", Status: 0},
+			TestCase: "Create TaskInfo",
+			Input:    task.Info{Name: "Test TaskInfo", Status: 0},
+			Expected: task.Info{ID: 1, Name: "Test TaskInfo", Status: 0},
 		},
 	}
 
@@ -37,17 +37,17 @@ func TestCreateTask(t *testing.T) {
 func TestGetAllTasks(t *testing.T) {
 	repo := NewInMemoryTaskRepository()
 
-	newTask := task.Task{Name: "Test Task", Status: 0}
+	newTask := task.Info{Name: "Test TaskInfo", Status: 0}
 	repo.Create(newTask)
 
 	tests := []struct {
 		TestCase string
-		Expected []task.Task
+		Expected []task.Info
 	}{
 		{
 			TestCase: "Get All Tasks",
-			Expected: []task.Task{
-				{ID: 1, Name: "Test Task", Status: 0},
+			Expected: []task.Info{
+				{ID: 1, Name: "Test TaskInfo", Status: 0},
 			},
 		},
 	}
@@ -64,16 +64,16 @@ func TestGetAllTasks(t *testing.T) {
 func TestGetTaskByID(t *testing.T) {
 	repo := NewInMemoryTaskRepository()
 
-	newTask := task.Task{Name: "Test Task", Status: 0}
+	newTask := task.Info{Name: "Test TaskInfo", Status: 0}
 	createdTask, _ := repo.Create(newTask)
 
 	tests := []struct {
 		TestCase string
 		ID       int
-		Expected task.Task
+		Expected task.Info
 	}{
 		{
-			TestCase: "Get Task By ID",
+			TestCase: "Get TaskInfo By ID",
 			ID:       createdTask.ID,
 			Expected: createdTask,
 		},
@@ -91,18 +91,18 @@ func TestGetTaskByID(t *testing.T) {
 func TestUpdateTask(t *testing.T) {
 	repo := NewInMemoryTaskRepository()
 
-	newTask := task.Task{Name: "Test Task", Status: 0}
+	newTask := task.Info{Name: "Test TaskInfo", Status: 0}
 	createdTask, _ := repo.Create(newTask)
 
 	tests := []struct {
 		TestCase string
-		Input    task.Task
-		Expected task.Task
+		Input    task.Info
+		Expected task.Info
 	}{
 		{
-			TestCase: "Update Task",
-			Input:    task.Task{ID: createdTask.ID, Name: "Updated Task", Status: 1},
-			Expected: task.Task{ID: createdTask.ID, Name: "Updated Task", Status: 1},
+			TestCase: "Update TaskInfo",
+			Input:    task.Info{ID: createdTask.ID, Name: "Updated TaskInfo", Status: 1},
+			Expected: task.Info{ID: createdTask.ID, Name: "Updated TaskInfo", Status: 1},
 		},
 	}
 
@@ -120,7 +120,7 @@ func TestUpdateTask(t *testing.T) {
 func TestDeleteTask(t *testing.T) {
 	repo := NewInMemoryTaskRepository()
 
-	newTask := task.Task{Name: "Test Task", Status: 0}
+	newTask := task.Info{Name: "Test TaskInfo", Status: 0}
 	createdTask, _ := repo.Create(newTask)
 
 	tests := []struct {
@@ -128,7 +128,7 @@ func TestDeleteTask(t *testing.T) {
 		ID       int
 	}{
 		{
-			TestCase: "Delete Task",
+			TestCase: "Delete TaskInfo",
 			ID:       createdTask.ID,
 		},
 	}

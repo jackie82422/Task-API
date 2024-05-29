@@ -109,13 +109,13 @@ func TestCreateTask(t *testing.T) {
 
 	tests := []struct {
 		TestCase string
-		Input    task.Task
-		Expected task.Task
+		Input    task.Info
+		Expected task.Info
 	}{
 		{
-			TestCase: "Create Task",
-			Input:    task.Task{Name: "Test Task", Status: 0},
-			Expected: task.Task{ID: 1, Name: "Test Task", Status: 0},
+			TestCase: "Create TaskInfo",
+			Input:    task.Info{Name: "Test TaskInfo", Status: 0},
+			Expected: task.Info{ID: 1, Name: "Test TaskInfo", Status: 0},
 		},
 	}
 
@@ -138,12 +138,12 @@ func TestGetAllTasks(t *testing.T) {
 
 	tests := []struct {
 		TestCase string
-		Expected []task.Task
+		Expected []task.Info
 	}{
 		{
 			TestCase: "Get All Tasks",
-			Expected: []task.Task{
-				{ID: 1, Name: "Test Task", Status: 0},
+			Expected: []task.Info{
+				{ID: 1, Name: "Test TaskInfo", Status: 0},
 			},
 		},
 	}
@@ -152,7 +152,7 @@ func TestGetAllTasks(t *testing.T) {
 	assert.NoError(t, err)
 
 	// First, create a task
-	newTask := task.Task{Name: "Test Task", Status: 0}
+	newTask := task.Info{Name: "Test TaskInfo", Status: 0}
 	_, _ = repo.Create(newTask)
 
 	for _, tc := range tests {
@@ -170,12 +170,12 @@ func TestGetTaskByID(t *testing.T) {
 	tests := []struct {
 		TestCase string
 		ID       int
-		Expected task.Task
+		Expected task.Info
 	}{
 		{
-			TestCase: "Get Task By ID",
+			TestCase: "Get TaskInfo By ID",
 			ID:       1,
-			Expected: task.Task{ID: 1, Name: "Test Task", Status: 0},
+			Expected: task.Info{ID: 1, Name: "Test TaskInfo", Status: 0},
 		},
 	}
 
@@ -183,7 +183,7 @@ func TestGetTaskByID(t *testing.T) {
 	assert.NoError(t, err)
 
 	// First, create a task
-	newTask := task.Task{Name: "Test Task", Status: 0}
+	newTask := task.Info{Name: "Test TaskInfo", Status: 0}
 	_, err = repo.Create(newTask)
 	assert.NoError(t, err)
 
@@ -201,13 +201,13 @@ func TestUpdateTask(t *testing.T) {
 
 	tests := []struct {
 		TestCase string
-		Input    task.Task
-		Expected task.Task
+		Input    task.Info
+		Expected task.Info
 	}{
 		{
-			TestCase: "Update Task",
-			Input:    task.Task{ID: 1, Name: "Updated Task", Status: 1},
-			Expected: task.Task{ID: 1, Name: "Updated Task", Status: 1},
+			TestCase: "Update TaskInfo",
+			Input:    task.Info{ID: 1, Name: "Updated TaskInfo", Status: 1},
+			Expected: task.Info{ID: 1, Name: "Updated TaskInfo", Status: 1},
 		},
 	}
 
@@ -215,7 +215,7 @@ func TestUpdateTask(t *testing.T) {
 	assert.NoError(t, err)
 
 	// First, create a task
-	newTask := task.Task{Name: "Test Task", Status: 0}
+	newTask := task.Info{Name: "Test TaskInfo", Status: 0}
 	_, err = repo.Create(newTask)
 	assert.NoError(t, err)
 
@@ -238,7 +238,7 @@ func TestDeleteTask(t *testing.T) {
 		ID       int
 	}{
 		{
-			TestCase: "Delete Task",
+			TestCase: "Delete TaskInfo",
 			ID:       1,
 		},
 	}
@@ -247,7 +247,7 @@ func TestDeleteTask(t *testing.T) {
 	assert.NoError(t, err)
 
 	// First, create a task
-	newTask := task.Task{Name: "Test Task", Status: 0}
+	newTask := task.Info{Name: "Test TaskInfo", Status: 0}
 	_, err = repo.Create(newTask)
 	assert.NoError(t, err)
 
