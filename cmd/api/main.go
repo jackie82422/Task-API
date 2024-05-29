@@ -3,6 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/dig"
+	"os"
+	"task-api/internal/domain/task"
+	"task-api/internal/infrastructure/persistence/mysql"
 
 	"task-api/internal/handlers"
 	"task-api/internal/infrastructure/persistence/memory"
@@ -32,15 +35,17 @@ func main() {
 func buildContainer() *dig.Container {
 	container := dig.New()
 
-	err := container.Provide(memory.NewInMemoryTaskRepository)
-	if err != nil {
-		return nil
+	storageType := os.Getenv("STORAGE_TYPE")
+	if storageType == "mysql" {
+		dsn := os.Getenv("MYSQL_DSN")
+		container.Provide(func() (task.Repository, error) {
+			return mysql.NewMySQLTaskRepository(dsn)
+		})
+	} else {
+		container.Provide(memory.NewInMemoryTaskRepository)
 	}
 
-	err = container.Provide(handlers.NewTaskHandler)
-	if err != nil {
-		return nil
-	}
+	container.Provide(handlers.NewTaskHandler)
 
 	return container
 }

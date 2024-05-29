@@ -7,20 +7,20 @@ import (
 	"task-api/internal/domain/task"
 )
 
-type InMemoryTaskRepository struct {
+type TaskRepository struct {
 	mu     sync.Mutex
 	tasks  map[int]task.Task
 	nextID int
 }
 
 func NewInMemoryTaskRepository() task.Repository {
-	return &InMemoryTaskRepository{
+	return &TaskRepository{
 		tasks:  make(map[int]task.Task),
 		nextID: 1,
 	}
 }
 
-func (r *InMemoryTaskRepository) GetAll() ([]task.Task, error) {
+func (r *TaskRepository) GetAll() ([]task.Task, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -31,7 +31,7 @@ func (r *InMemoryTaskRepository) GetAll() ([]task.Task, error) {
 	return result, nil
 }
 
-func (r *InMemoryTaskRepository) GetByID(id int) (task.Task, error) {
+func (r *TaskRepository) GetByID(id int) (task.Task, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -42,7 +42,7 @@ func (r *InMemoryTaskRepository) GetByID(id int) (task.Task, error) {
 	return t, nil
 }
 
-func (r *InMemoryTaskRepository) Create(t task.Task) (task.Task, error) {
+func (r *TaskRepository) Create(t task.Task) (task.Task, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -52,7 +52,7 @@ func (r *InMemoryTaskRepository) Create(t task.Task) (task.Task, error) {
 	return t, nil
 }
 
-func (r *InMemoryTaskRepository) Update(t task.Task) (task.Task, error) {
+func (r *TaskRepository) Update(t task.Task) (task.Task, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -64,7 +64,7 @@ func (r *InMemoryTaskRepository) Update(t task.Task) (task.Task, error) {
 	return t, nil
 }
 
-func (r *InMemoryTaskRepository) Delete(id int) error {
+func (r *TaskRepository) Delete(id int) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
