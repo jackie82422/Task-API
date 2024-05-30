@@ -1,39 +1,65 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"log"
 	"task-api/internal/config"
-
-	"github.com/gin-gonic/gin"
-	"go.uber.org/dig"
-
 	"task-api/internal/handlers"
+	"task-api/internal/infrastructure/persistence/memory"
+	"task-api/internal/infrastructure/persistence/mysql"
 	taskService "task-api/internal/services/task"
 )
 
 func main() {
-	r := gin.Default()
 	injector := config.NewInjector()
-	if err := injector.InvokeStorage(); err != nil {
-		log.Fatal(err)
+
+	// Define in-memory and relational repository constructors
+	inMemoryRepos := []interface{}{
+		memory.NewInMemoryTaskRepository,
 	}
 
-	// Define all handler constructors
-	handlerConstructors := []interface{}{
+	relationRepos := []interface{}{
+		mysql.NewMySQLTaskRepository,
+	}
+
+	services := []interface{}{
+		taskService.NewTaskService,
+	}
+
+	handler := []interface{}{
 		handlers.NewTaskHandler,
 	}
 
-	// Register all handlers
-	if err := injector.RegisterHandlers(r, handlerConstructors); err != nil {
-		log.Fatalf("Failed to register handlers: %v", err)
+	err := injector.Provide(func() *gin.Engine {
+		return gin.Default()
+	})
+	if err != nil {
+		log.Fatal(err)
 	}
-}
 
-func buildContainer() *dig.Container {
-	container := dig.New()
+	// Provide storage injection
+	if err := injector.ProvideStorage(inMemoryRepos, relationRepos); err != nil {
+		log.Fatalf("Failed to invoke storage: %v", err)
+	}
 
-	container.Provide(taskService.NewTaskService)
-	container.Provide(handlers.NewTaskHandler)
+	// Provide Services injection
+	if err := injector.ProvideMulti(services); err != nil {
+		log.Fatalf("Failed to invoke service: %v", err)
+	}
 
-	return container
+	// Provide Handler injection
+	if err := injector.ProvideMulti(handler); err != nil {
+		log.Fatalf("Failed to invoke service: %v", err)
+	}
+
+	err = injector.Invoke(func(router *gin.Engine, taskHandler *handlers.TaskHandler) {
+		taskHandler.RegisterRoutes(router)
+		if err := router.Run(":8080"); err != nil {
+			log.Fatalf("Failed to run server: %v", err)
+		}
+	})
+
+	if err != nil {
+		log.Fatalf("Failed to invoke dependencies: %v", err)
+	}
 }

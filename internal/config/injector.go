@@ -1,13 +1,11 @@
 package config
 
 import (
-	"github.com/gin-gonic/gin"
-	"go.uber.org/dig"
 	"os"
+
+	"go.uber.org/dig"
+
 	"task-api/internal/domain/task"
-	"task-api/internal/handlers"
-	"task-api/internal/infrastructure/persistence/memory"
-	"task-api/internal/infrastructure/persistence/mysql"
 )
 
 const (
@@ -28,35 +26,36 @@ func (i *Injector) Invoke(function interface{}) error {
 	return i.container.Invoke(function)
 }
 
-func (i *Injector) InvokeStorage() error {
+func (i *Injector) ProvideStorage(inMemoryRepos []interface{}, relationRepos []interface{}) error {
 	storageType := os.Getenv("STORAGE_TYPE")
 	if storageType == Mysql {
 		dsn := os.Getenv("MYSQL_DSN")
-		err := i.container.Provide(func() (task.Repository, error) {
-			return mysql.NewMySQLTaskRepository(dsn)
-		})
-		if err != nil {
-			return err
+		for _, repoConstructor := range relationRepos {
+			if err := i.container.Provide(func() (task.Repository, error) {
+				return repoConstructor.(func(string) (task.Repository, error))(dsn)
+			}); err != nil {
+				return err
+			}
 		}
 	} else {
-		err := i.container.Provide(func() task.Repository {
-			return memory.NewInMemoryTaskRepository()
-		})
-		if err != nil {
-			return err
+		for _, repoConstructor := range inMemoryRepos {
+			if err := i.container.Provide(repoConstructor.(func() task.Repository)); err != nil {
+				return err
+			}
 		}
 	}
-
 	return nil
 }
 
-func (i *Injector) RegisterHandlers(router *gin.Engine, constructors []interface{}) error {
+func (i *Injector) ProvideMulti(constructors []interface{}) error {
 	for _, constructor := range constructors {
-		if err := i.container.Invoke(constructor); err != nil {
+		if err := i.container.Provide(constructor); err != nil {
 			return err
 		}
-		handler := constructor.(handlers.Handler)
-		handler.RegisterRoutes(router)
 	}
 	return nil
+}
+
+func (i *Injector) Provide(constructor interface{}) error {
+	return i.container.Provide(constructor)
 }
