@@ -17,9 +17,9 @@ services:
       - "6379:6379"
 
   api:
-    image: task_api:latest
+    image: task_api:v1.0.0
     ports:
-      - "8080:8080"
+      - "8083:8080"
     environment:
       STORAGE_TYPE: mysql
       MYSQL_DSN: root:root@tcp(mysql:3306)/TaskDB

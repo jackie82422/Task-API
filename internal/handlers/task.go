@@ -17,6 +17,14 @@ func NewTaskHandler(service taskService.Service) *TaskHandler {
 	return &TaskHandler{Service: service}
 }
 
+func (h *TaskHandler) RegisterRoutes(router *gin.Engine) {
+	router.GET("/tasks", h.GetTasks)
+	router.GET("/tasks/:id", h.GetTask)
+	router.POST("/tasks", h.CreateTask)
+	router.PUT("/tasks/:id", h.UpdateTask)
+	router.DELETE("/tasks/:id", h.DeleteTask)
+}
+
 func (h *TaskHandler) GetTasks(c *gin.Context) {
 	tasks, err := h.Service.GetAllTasks()
 	if err != nil {
