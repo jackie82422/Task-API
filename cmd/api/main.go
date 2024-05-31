@@ -1,8 +1,14 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+
+	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"task-api/internal/config"
 	"task-api/internal/handlers"
 	"task-api/internal/infrastructure/persistence/memory"
@@ -31,7 +37,18 @@ func main() {
 	}
 
 	err := injector.Provide(func() *gin.Engine {
-		return gin.Default()
+		swagger, err := openapi3.NewLoader().LoadFromFile("./cmd/api/api_doc.yaml")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		swagger.Servers = nil
+		router := gin.Default()
+		router.GET("/openapi.json", func(c *gin.Context) {
+			c.JSONP(http.StatusOK, swagger)
+		})
+		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL("/openapi.json")))
+		return router
 	})
 	if err != nil {
 		log.Fatal(err)
