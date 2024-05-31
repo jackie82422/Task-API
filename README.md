@@ -81,42 +81,48 @@ The OpenAPI JSON document is available at `http://localhost:8080/openapi.json`.
 .
 ├── README.md
 ├── build
-│   ├── docker
-│   │   ├── api
-│   │   │   └── Dockerfile
-│   │   ├── mysql
-│   │   │   └── Dockerfile
-│   │   └── redis
-│   │       └── Dockerfile
-│   └── docker-compose.yml
+│   ├── docker
+│   │   ├── api
+│   │   │   └── Dockerfile
+│   │   ├── mysql
+│   │   │   └── Dockerfile
+│   │   └── redis
+│   │       └── Dockerfile
+│   └── docker-compose.yml
 ├── cmd
-│   └── api
-│       ├── main.go
-│       └── openapi.yaml
+│   └── api
+│       ├── api_doc.yaml
+│       └── main.go
 ├── go.mod
 ├── go.sum
 ├── internal
-│   ├── config
-│   │   └── injector.go
-│   ├── domain
-│   │   └── task
-│   │       ├── repository.go
-│   │       └── task.go
-│   ├── handlers
-│   │   └── task_handler.go
-│   ├── infrastructure
-│   │   ├── persistence
-│   │   │   ├── memory
-│   │   │   │   └── repository.go
-│   │   │   └── mysql
-│   │   │       └── repository.go
-│   │   └── redis
-│   ├── mocks
-│   │   ├── mock_task_repository.go
-│   │   └── mock_task_service.go
-│   └── services
-│       └── task
-│           ├── service.go
-│           └── impl.go
-├── migrations
-│   └── init.sql
+│   ├── config
+│   │   └── injector.go
+│   ├── domain
+│   │   └── task
+│   │       ├── repository.go
+│   │       └── task.go
+│   ├── handlers
+│   │   ├── handler.go
+│   │   ├── task.go
+│   │   └── task_test.go
+│   ├── infrastructure
+│   │   ├── persistence
+│   │   │   ├── memory
+│   │   │   │   ├── task_repository.go
+│   │   │   │   └── task_repository_test.go
+│   │   │   └── mysql
+│   │   │       ├── task_repository.go
+│   │   │       └── task_repository_test.go
+│   │   └── redis
+│   ├── mocks
+│   │   ├── mock_task_repository.go
+│   │   └── mock_task_service.go
+│   └── services
+│       └── task
+│           ├── impl.go
+│           ├── impl_test.go
+│           └── task.go
+└── migrations
+    └── init.sql
+
