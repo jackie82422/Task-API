@@ -57,6 +57,11 @@ This is a sample server for managing tasks. It is built with Go using the Gin fr
     ```sh
     go run cmd/api/main.go
     ```
+   or
+
+   ```sh
+   docker build -f build/docker/api/Dockerfile -t task_api:v1.0.0 . && docker run -d -p 8080:8080 --name task_api_container task_api:v1.0.0
+   ```
 
 3. The API server will be running at `http://localhost:8080`.
 
