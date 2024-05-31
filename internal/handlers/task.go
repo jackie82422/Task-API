@@ -3,10 +3,11 @@ package handlers
 import (
 	"net/http"
 	"strconv"
-	"task-api/internal/domain/task"
-	taskService "task-api/internal/services/task"
 
 	"github.com/gin-gonic/gin"
+
+	"task-api/internal/domain/task"
+	taskService "task-api/internal/services/task"
 )
 
 type TaskHandler struct {
