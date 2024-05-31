@@ -19,7 +19,7 @@ This is a sample server for managing tasks. It is built with Go using the Gin fr
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/your-username/task-api.git
+    git clone https://github.com/jackie82422/Task-API.git
     cd task-api
     ```
 
